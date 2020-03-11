@@ -6,7 +6,7 @@
     <button type="submit">Get And Save Data</button>
 </form>
 
-<form action="#" th:action="@{/api/history}" method="post" th:object="${dataContainer}">
+<form action="#" th:action="@{/api/history}" method="post" th:value="${historyObjectSensorValues}">
     <div>
         <table>
             <thead>
@@ -32,7 +32,7 @@
         </table>
         <button type="submit">Print Sensor History</button>
     </div>
-    <div th:if="${!dataContainer.objectSensorValues.empty}">
+    <div th:if="${!historyObjectSensorValues.empty}">
         <table>
             <thead>
             <tr>
@@ -42,7 +42,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="objectSensorValue : ${dataContainer.objectSensorValues}">
+            <tr th:each="objectSensorValue : ${historyObjectSensorValues}">
                 <td><span th:text="${objectSensorValue.objectId}"> ObjectId </span></td>
                 <td><span th:text="${objectSensorValue.time}"> Time </span></td>
                 <td><span th:text="${objectSensorValue.value}"> Value </span></td>
@@ -52,7 +52,7 @@
     </div>
 </form>
 
-<form action="#" th:action="@{/api/latest}" method="post" th:object="${dataContainer}>
+<form action="#" th:action="@{/api/latest}" th:value="${latestObjectSensorValues}" method="post">
     <div>
         <table>
             <thead>
@@ -70,27 +70,43 @@
         </table>
         <button type="submit">Print Object Latest Values</button>
     </div>
-<div th:if="${!dataContainer.objectSensorValues.empty}">
-    <table>
-        <thead>
-        <tr>
-            <th>Sensor id</th>
-            <th>Time</th>
-            <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="objectSensorValue : ${dataContainer.objectSensorValues}">
-            <td><span th:text="${objectSensorValue.sensorId}"> SensorId </span></td>
-            <td><span th:text="${objectSensorValue.value}"> Value </span></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+    <div th:if="${!latestObjectSensorValues.empty}">
+        <table>
+            <thead>
+            <tr>
+                <th>Sensor id</th>
+                <th>Time</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="objectSensorValue : ${latestObjectSensorValues}">
+                <td><span th:text="${objectSensorValue.sensorId}"> SensorId </span></td>
+                <td><span th:text="${objectSensorValue.value}"> Value </span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </form>
 
-<form action="#" th:action="@{/api/avg}" method="get">
+<form action="#" th:action="@{/api/avg}" th:value="avgLatestObjectSensorValues" method="get">
     <button type="submit">Print avg of latest values for all objects</button>
+    <div th:if="${!avgLatestObjectSensorValues.empty}">
+        <table>
+            <thead>
+            <tr>
+                <th>Object id</th>
+                <th>Avg Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="objectSensorValue : ${avgLatestObjectSensorValues}">
+                <td><span th:text="${objectSensorValue.key}"> SensorId </span></td>
+                <td><span th:text="${objectSensorValue.value}"> Value </span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </form>
 </body>
 </html>

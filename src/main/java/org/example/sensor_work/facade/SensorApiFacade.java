@@ -7,8 +7,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Arrays.asList;
+import static org.springframework.data.util.Pair.toMap;
 
 @Component
 public class SensorApiFacade {
@@ -55,6 +59,9 @@ public class SensorApiFacade {
     }
 
     public Map<Long, Double> findLatestAvgForAllObjects() {
-        return objectSensorService.findLatestAvgForAllObjects();
+        Object[][] result = objectSensorService.findLatestAvgForAllObjects();
+        return new HashMap<>() {{
+            asList(result).forEach(o -> put((Long) o[0], (Double) o[1]));
+        }};
     }
 }

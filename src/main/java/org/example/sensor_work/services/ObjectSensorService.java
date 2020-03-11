@@ -3,7 +3,6 @@ package org.example.sensor_work.services;
 import org.example.sensor_work.entity.ObjectSensorValue;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ObjectSensorService {
 
@@ -13,5 +12,5 @@ public interface ObjectSensorService {
 
     List<ObjectSensorValue> findAllLatestForObject(Long objectId);
 
-    Map<Long, Double> findLatestAvgForAllObjects();
+    Object[][] findLatestAvgForAllObjects();
 }

@@ -43,7 +43,7 @@ public class ObjectSensorServiceImpl implements ObjectSensorService {
 
     @Override
     public List<ObjectSensorValue> findHistoryBySensorIdAndTimeBetween(Long sensorId, Long startTime, Long endTime) {
-        return objectSensorRepo.findAllBySensorIdAndTimeBetween(sensorId, startTime, endTime);
+        return objectSensorRepo.findAllBySensorIdAndTimeBetweenOrderByObjectId(sensorId, startTime, endTime);
     }
 
     @Override
@@ -52,13 +52,7 @@ public class ObjectSensorServiceImpl implements ObjectSensorService {
     }
 
     @Override
-    public Map<Long, Double> findLatestAvgForAllObjects() {
-//        Object[][] allPairs = objectSensorRepo.findLatestAvgForAllObjectsByMaxTime();
-        Object[][] allPairs = new Object[5][5];
-        return new HashMap<>() {{
-            asList(allPairs).forEach(
-                    pair -> put((Long) pair[0], (Double) pair[1])
-            );
-        }};
+    public Object[][] findLatestAvgForAllObjects() {
+        return objectSensorRepo.findLatestAvgForAllObjectsByMaxTime();
     }
 }
