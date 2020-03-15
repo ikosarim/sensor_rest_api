@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static org.springframework.data.util.Pair.toMap;
 
 @Component
 public class SensorApiFacade {

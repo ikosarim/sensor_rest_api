@@ -50,11 +50,14 @@ public class DatabaseConfig {
         Properties hibernateProp = new Properties();
         hibernateProp.put("hibernate.dialect", env.getProperty("spring.datasource.dialect"));
         hibernateProp.put("hibernate.hbm2ddl.auto", env.getProperty("spring.hibernate.hbm2ddl.auto"));
-        hibernateProp.put("hibernate.show_sql", true);
+        hibernateProp.put("hibernate.show_sql", false);
         hibernateProp.put("hibernate.format_sql", true);
-        hibernateProp.put("hibernate.max_fetch_depth", Integer.parseInt(env.getProperty("spring.hibernate.max_fetch_depth")));
-        hibernateProp.put("hibernate.jdbc.batch_size", Integer.parseInt(env.getProperty("spring.hibernate.jdbc.batch_size")));
-        hibernateProp.put("hibernate.jdbc.fetch_size", Integer.parseInt(env.getProperty("spring.hibernate.jdbc.fetch_size")));
+        hibernateProp.put("spring.jpa.properties.hibernate.jdbc.batch_size",
+                Integer.parseInt(env.getProperty("spring.jpa.properties.hibernate.jdbc.batch_size")));
+        hibernateProp.put("spring.jpa.properties.hibernate.order_inserts",
+                Boolean.parseBoolean(env.getProperty("spring.jpa.properties.hibernate.order_inserts")));
+        hibernateProp.put("spring.jpa.properties.hibernate.generate_statistics",
+                Boolean.parseBoolean(env.getProperty("spring.jpa.properties.hibernate.generate_statistics")));
         return hibernateProp;
     }
 

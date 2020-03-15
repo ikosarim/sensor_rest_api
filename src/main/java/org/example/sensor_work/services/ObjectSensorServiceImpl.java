@@ -9,16 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static java.util.Arrays.asList;
 
 @Service
 public class ObjectSensorServiceImpl implements ObjectSensorService {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Autowired
     ObjectSensorRepo objectSensorRepo;
@@ -26,20 +23,21 @@ public class ObjectSensorServiceImpl implements ObjectSensorService {
     @Override
     @Transactional
     public void readAndSaveData(String filePath) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
+        long startTime = System.currentTimeMillis();
         TypeReference<List<ObjectSensorValue>> typeReference = new TypeReference<>() {
         };
         InputStream inputStream = new FileInputStream(filePath);
         List<ObjectSensorValue> objectSensorValues;
         try {
-            objectSensorValues = mapper.readValue(inputStream, typeReference);
-        } catch (IOException e) {
+            objectSensorValues = MAPPER.readValue(inputStream, typeReference);
+        } catch (Exception e) {
             throw new Exception();
         }
+        System.out.println(System.currentTimeMillis() - startTime);
+        startTime = System.currentTimeMillis();
         objectSensorRepo.saveAll(objectSensorValues);
+        System.out.println(System.currentTimeMillis() - startTime);
     }
-//    Необходимо масштабировать чтение файла и маппинг
-//    Use batches
 
     @Override
     public List<ObjectSensorValue> findHistoryBySensorIdAndTimeBetween(Long sensorId, Long startTime, Long endTime) {
