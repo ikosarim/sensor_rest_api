@@ -21,18 +21,18 @@ public class SensorApi {
 
     @GetMapping
     public String start(Model model) {
-        model.addAttribute("historyObjectSensorValues", new ArrayList<>());
-        model.addAttribute("latestObjectSensorValues", new ArrayList<>());
-        model.addAttribute("avgLatestObjectSensorValues", new HashMap<>());
+        model.addAttribute("historyMeasurementResultValues", new ArrayList<>());
+        model.addAttribute("latestMeasurementResultValues", new ArrayList<>());
+        model.addAttribute("avgLatestMeasurementResultValues", new HashMap<>());
         return "/api_page";
     }
 
     @GetMapping("/save")
     public String save(Model model) throws Exception {
         sensorApiFacade.runSaveAndDelJsonData();
-        model.addAttribute("historyObjectSensorValues", new ArrayList<>());
-        model.addAttribute("latestObjectSensorValues", new ArrayList<>());
-        model.addAttribute("avgLatestObjectSensorValues", new HashMap<>());
+        model.addAttribute("historyMeasurementResultValues", new ArrayList<>());
+        model.addAttribute("latestMeasurementResultValues", new ArrayList<>());
+        model.addAttribute("avgLatestMeasurementResultValues", new HashMap<>());
         return "/api_page";
     }
 
@@ -41,26 +41,26 @@ public class SensorApi {
                           @RequestParam(value = "sensor_id") Long sensorId,
                           @RequestParam(value = "start_datetime") Long startDatetime,
                           @RequestParam(value = "end_datetime") Long endDatetime) {
-        model.addAttribute("historyObjectSensorValues", sensorApiFacade.findAllValuesBySensorIdAndTimeBetween(sensorId, startDatetime, endDatetime));
-        model.addAttribute("latestObjectSensorValues", new ArrayList<>());
-        model.addAttribute("avgLatestObjectSensorValues", new HashMap<>());
+        model.addAttribute("historyMeasurementResultValues", sensorApiFacade.findAllValuesBySensorIdAndTimeBetween(sensorId, startDatetime, endDatetime));
+        model.addAttribute("latestMeasurementResultValues", new ArrayList<>());
+        model.addAttribute("avgLatestMeasurementResultValues", new HashMap<>());
         return "/api_page";
     }
 
     @PostMapping("/latest")
     public String latest(Model model,
                          @RequestParam(value = "object_id") Long objectId) {
-        model.addAttribute("historyObjectSensorValues", new ArrayList<>());
-        model.addAttribute("latestObjectSensorValues", sensorApiFacade.findAllLatestForObject(objectId));
-        model.addAttribute("avgLatestObjectSensorValues", new HashMap<>());
+        model.addAttribute("historyMeasurementResultValues", new ArrayList<>());
+        model.addAttribute("latestMeasurementResultValues", sensorApiFacade.findAllLatestForObject(objectId));
+        model.addAttribute("avgLatestMeasurementResultValues", new HashMap<>());
         return "/api_page";
     }
 
     @GetMapping("/avg")
     public String avg(Model model) {
-        model.addAttribute("historyObjectSensorValues", new ArrayList<>());
-        model.addAttribute("latestObjectSensorValues", new ArrayList<>());
-        model.addAttribute("avgLatestObjectSensorValues", sensorApiFacade.findLatestAvgForAllObjects());
+        model.addAttribute("historyMeasurementResultValues", new ArrayList<>());
+        model.addAttribute("latestMeasurementResultValues", new ArrayList<>());
+        model.addAttribute("avgLatestMeasurementResultValues", sensorApiFacade.findLatestAvgForAllObjects());
         return "/api_page";
     }
 }
