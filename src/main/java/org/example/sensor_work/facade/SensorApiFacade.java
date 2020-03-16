@@ -10,8 +10,10 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 
@@ -24,31 +26,7 @@ public class SensorApiFacade {
     private ObjectSensorService objectSensorService;
 
     public void runSaveAndDelJsonData() throws Exception {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            runtime.exec("src/main/resources/generate_sensor_data.py");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File file = new File("data.json");
-        long fileSize = file.length();
-        boolean writinig = true;
-        while (writinig) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            file = new File("data.json");
-            if (file.length() == 0) {
-                throw new Exception("Problem with writing file");
-            }
-            if (file.length() > fileSize) {
-                fileSize = file.length();
-            } else {
-                writinig = false;
-            }
-        }
+        File file = dataService.generateData();
         Pair<Map<Long, ObjectOfObservation>, Map<Long, Sensor>> dataPair = dataService.readAndGetData(file.getPath());
         file.delete();
         objectSensorService.saveSensors(new HashSet<>() {{

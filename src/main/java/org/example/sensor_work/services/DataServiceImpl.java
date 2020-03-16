@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -90,5 +91,35 @@ public class DataServiceImpl implements DataService{
             sensor.getMeasurementResultValues().add(measurementResultValue);
         }
         return Pair.of(objectOfObservationMap, sensorMap);
+    }
+
+    @Override
+    public File generateData() throws Exception {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            runtime.exec("src/main/resources/generate_sensor_data.py");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File file = new File("data.json");
+        long fileSize = file.length();
+        boolean writinig = true;
+        while (writinig) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            file = new File("data.json");
+            if (file.length() == 0) {
+                throw new Exception("Problem with writing file");
+            }
+            if (file.length() > fileSize) {
+                fileSize = file.length();
+            } else {
+                writinig = false;
+            }
+        }
+        return file;
     }
 }
