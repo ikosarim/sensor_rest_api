@@ -1,7 +1,6 @@
 package org.example.sensor_work.init;
 
 import org.example.sensor_work.config.DatabaseConfig;
-import org.example.sensor_work.config.WebAppConfig;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -18,9 +17,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{
-                WebAppConfig.class
-        };
+        return new Class<?>[]{};
     }
 
     @Override

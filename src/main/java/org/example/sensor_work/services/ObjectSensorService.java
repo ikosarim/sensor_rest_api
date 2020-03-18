@@ -18,4 +18,6 @@ public interface ObjectSensorService {
     void saveSensors(Set<Sensor> sensors);
 
     void saveObjectOfObservationAndValues(Set<ObjectOfObservation> objectsWithValues);
+
+    ObjectOfObservation getObjectOfObservationById(long id);
 }

@@ -49,4 +49,10 @@ public class ObjectSensorServiceImpl implements ObjectSensorService {
     public void saveObjectOfObservationAndValues(Set<ObjectOfObservation> objectsWithValues) {
         objectOfObservationRepo.saveAll(objectsWithValues);
     }
+
+    @Override
+    public ObjectOfObservation getObjectOfObservationById(long id) {
+        return objectOfObservationRepo.findById(id)
+                .orElse(null);
+    }
 }

@@ -1,5 +1,6 @@
 package org.example.sensor_work.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Sensor {
     @Column(name = "sensor_name")
     private String sensorName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "sensor", fetch = LAZY, orphanRemoval = true)
     private Set<MeasurementResultValue> measurementResultValues;
 

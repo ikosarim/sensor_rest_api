@@ -1,66 +1,57 @@
 package org.example.sensor_work.controllers;
 
+import org.example.sensor_work.entity.MeasurementResultValue;
 import org.example.sensor_work.facade.SensorApiFacade;
+import org.example.sensor_work.model.LatestAvgForAllObjects;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-@Controller
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
+
+@RestController
 @RequestMapping("/api")
 public class SensorApi {
 
     @Autowired
     private SensorApiFacade sensorApiFacade;
 
-    @GetMapping
-    public String start(Model model) {
-        model.addAttribute("historyMeasurementResultValues", new ArrayList<>());
-        model.addAttribute("latestMeasurementResultValues", new ArrayList<>());
-        model.addAttribute("avgLatestMeasurementResultValues", new HashMap<>());
-        return "/api_page";
-    }
-
     @GetMapping("/save")
-    public String save(Model model) throws Exception {
+    @ResponseStatus(value = HttpStatus.OK)
+    public void save() throws Exception {
         sensorApiFacade.runSaveAndDelJsonData();
-        model.addAttribute("historyMeasurementResultValues", new ArrayList<>());
-        model.addAttribute("latestMeasurementResultValues", new ArrayList<>());
-        model.addAttribute("avgLatestMeasurementResultValues", new HashMap<>());
-        return "/api_page";
     }
 
-    @PostMapping("/history")
-    public String history(Model model,
-                          @RequestParam(value = "sensor_id") Long sensorId,
-                          @RequestParam(value = "start_datetime") Long startDatetime,
-                          @RequestParam(value = "end_datetime") Long endDatetime) {
-        model.addAttribute("historyMeasurementResultValues", sensorApiFacade.findAllValuesBySensorIdAndTimeBetween(sensorId, startDatetime, endDatetime));
-        model.addAttribute("latestMeasurementResultValues", new ArrayList<>());
-        model.addAttribute("avgLatestMeasurementResultValues", new HashMap<>());
-        return "/api_page";
+    @GetMapping("/history")
+    public ResponseEntity<List<MeasurementResultValue>> history(@RequestParam(value = "sensor_id") Long sensorId,
+                                                                @RequestParam(value = "start_datetime") Long startDatetime,
+                                                                @RequestParam(value = "end_datetime") Long endDatetime) {
+        List<MeasurementResultValue> history = sensorApiFacade.findAllValuesBySensorIdAndTimeBetween(sensorId, startDatetime, endDatetime);
+        if (history.isEmpty()) {
+            return new ResponseEntity<>(NO_CONTENT);
+        }
+        return new ResponseEntity<>(history, OK);
     }
 
-    @PostMapping("/latest")
-    public String latest(Model model,
-                         @RequestParam(value = "object_id") Long objectId) {
-        model.addAttribute("historyMeasurementResultValues", new ArrayList<>());
-        model.addAttribute("latestMeasurementResultValues", sensorApiFacade.findAllLatestForObject(objectId));
-        model.addAttribute("avgLatestMeasurementResultValues", new HashMap<>());
-        return "/api_page";
+    @GetMapping("/latest")
+    public ResponseEntity<List<MeasurementResultValue>> latest(@RequestParam(value = "object_id") Long objectId) {
+        List<MeasurementResultValue> latest = sensorApiFacade.findAllLatestForObject(objectId);
+        if (latest.isEmpty()) {
+            return new ResponseEntity<>(NO_CONTENT);
+        }
+        return new ResponseEntity<>(latest, OK);
     }
 
     @GetMapping("/avg")
-    public String avg(Model model) {
-        model.addAttribute("historyMeasurementResultValues", new ArrayList<>());
-        model.addAttribute("latestMeasurementResultValues", new ArrayList<>());
-        model.addAttribute("avgLatestMeasurementResultValues", sensorApiFacade.findLatestAvgForAllObjects());
-        return "/api_page";
+    public ResponseEntity<List<LatestAvgForAllObjects>> avg() {
+        List<LatestAvgForAllObjects> avg = sensorApiFacade.findLatestAvgForAllObjects();
+        if (avg.isEmpty()) {
+            return new ResponseEntity<>(NO_CONTENT);
+        }
+        return new ResponseEntity<>(avg, OK);
     }
 }

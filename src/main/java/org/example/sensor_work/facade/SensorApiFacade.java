@@ -3,6 +3,7 @@ package org.example.sensor_work.facade;
 import org.example.sensor_work.entity.MeasurementResultValue;
 import org.example.sensor_work.entity.ObjectOfObservation;
 import org.example.sensor_work.entity.Sensor;
+import org.example.sensor_work.model.LatestAvgForAllObjects;
 import org.example.sensor_work.services.DataService;
 import org.example.sensor_work.services.ObjectSensorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -45,10 +46,15 @@ public class SensorApiFacade {
         return objectSensorService.findAllLatestForObject(objectId);
     }
 
-    public Map<Long, Double> findLatestAvgForAllObjects() {
+    public List<LatestAvgForAllObjects> findLatestAvgForAllObjects() {
         Object[][] result = objectSensorService.findLatestAvgForAllObjects();
-        return new HashMap<>() {{
-            asList(result).forEach(o -> put((Long) o[0], (Double) o[1]));
+        return new ArrayList<>() {{
+            asList(result).forEach(
+                    o -> add(LatestAvgForAllObjects.builder()
+                            .object((objectSensorService.getObjectOfObservationById((Long) o[0])))
+                            .latestAvg((Double) o[1])
+                            .build())
+            );
         }};
     }
 }
